@@ -1,0 +1,147 @@
+<html><head></head><body><div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a href="https://github.com/brianloveswords/throttle-function#readme">throttle-function (v0.1.0)</a>
+</h1>
+<h4>Takes a function, returns a function that will can only be called a certain amount of times per second.</h4>
+<div class="apidocSectionDiv"><a href="#apidoc.tableOfContents" id="apidoc.tableOfContents"><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.throttle-function">module throttle-function</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.throttle-function.throttle-function">
+            function <span class="apidocSignatureSpan"></span>throttle-function
+            <span class="apidocSignatureSpan">(fn, opts)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.throttle-function" id="apidoc.module.throttle-function">module throttle-function</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.throttle-function.throttle-function" id="apidoc.element.throttle-function.throttle-function">
+        function <span class="apidocSignatureSpan"></span>throttle-function
+        <span class="apidocSignatureSpan">(fn, opts)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function throttle(fn, opts) {
+  opts = opts || {}
+  var queue = []
+  const window = opts.window || 1
+  const limit = opts.limit || 1
+  const exact = opts.exact || false
+
+  var timer;
+
+  var msBetweenCalls = Math.ceil((window / limit) * 1000)
+
+  if (isNaN(msBetweenCalls))
+    throw new Error('opts.window and opts.limit must both be numbers')
+
+  function enqueue(args) {
+    return queue.push(args)
+  }
+
+  function dequeue() {
+    return queue.shift()
+  }
+
+  function kickQueue() {
+    if (timer) return timer
+    timer = setInterval(runQueue, msBetweenCalls)
+    return timer
+  }
+
+  function runQueue() {
+    const args = dequeue()
+
+    if (queue.length == 0 || !args) {
+      clearInterval(timer)
+      timer = null
+    }
+
+    const result = fn.apply(null, args)
+    return result
+  }
+
+  const throttled = function () {
+    const args = [].slice.call(arguments)
+    const position = enqueue(args)
+    const timer = kickQueue()
+
+    return {
+      position: position,
+      queuedAt: Date.now(),
+      timeUntilCall: position * msBetweenCalls
+    }
+  }
+
+  return throttled
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
+</body></html>
